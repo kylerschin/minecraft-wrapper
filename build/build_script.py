@@ -44,8 +44,8 @@ def build_wrapper(buildargs):
     with open("build/buildinfo.py", "w") as f:
         f.write(filetext)
 
-    with open("wrapper/core/buildinfo.py", "w") as f:
-        f.write(filetext)
+    #with open("wrapper/globals.py", "w") as f:
+        #f.write(filetext)
 
     with open("build/version.json", "w") as f:
         f.write(json.dumps(version))

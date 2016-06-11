@@ -1,3 +1,15 @@
+#About this branch#
+You are viewing the "stable" release branch.  This branch reliably supports 1.8.9, 1.9, and 1.10 Minecraft versions.
+
+This branch is considered stable enough to use for reliably hosting a small but active server having a steady load of 10-15 players in a "real" production server.  Easily holds 15 players at once with no lag or other bug issues, provided the wrapper is restarted periodically (how often will depend on the complexity of your plugins and how many players are joining and leaving).  This version suffers in general from the memory leak issue #276 which will result in player objects and uuids being set to "None/False" and general bugginess.  Some guidelines:
+20-30 players, complex plugin system - HOURLY
+10-15 players, complex plugins (block protection, land claims, so forth) - 2-4 hours
+otherwise, twice a day will suffice.
+
+Although the new version 8.x development wrapper has a lot nicer features and many many bugfixes, I suffers from terminal LAGGINESS.  This version, although not bug of some major bugs, runs _well_, so I provide it in hopes it can be useful until the speed of the new wrapper is improved and a formal release is issued
+
+R/ SurestTexas00
+
 #Overview#
 Wrapper.py is an easy to use Minecraft server wrapper for adding extra functionality into the server without modifying the server jar file.
 
@@ -114,20 +126,4 @@ Wrapper continues to be a work in progress and changes often happen faster than 
 <li>speedboost.py gives everyone a speedboost when someone dies - similar to survival games.</li>
 <li>poll.py allows players to vote for certain things on the server. It isn't very up-to-date at the moment, however. </li>
 </ul>
-</br>Tip:  
-If you want to see more error messages and other useful messages while developing plugins or debugging wrapper,
-look for the logging.json file and make changes to the "console" section:  
-```json
-...
-        "console": {
-            "stream": "ext://sys.stdout",
-            "formatter": "standard",
-            "class": "logging.StreamHandler",
-            "filters": [
-                "plugin"
-            ],
-            "level": "INFO" <-- Set to DEBUG or TRACE
-        },
-...
-```
-  Debug is a normal debugging setting.  TRACE allows detailed information, such as parsing of packets, etc.  If you want TRACE to be logged, find the item "trace" and change it's "level" to "TRACE" (set to "ERROR" by default)
+</br>Tip: Set debug=True in wrapper.properties if you want to see more error messages and other useful messages while developing plugins.
