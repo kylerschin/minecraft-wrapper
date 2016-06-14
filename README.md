@@ -6,7 +6,7 @@ This branch is considered stable enough to use for reliably hosting a small but 
 10-15 players, complex plugins (block protection, land claims, so forth) - 2-4 hours
 otherwise, twice a day will suffice.
 
-Although the new version 8.x development wrapper has a lot nicer features and many many bugfixes, I suffers from terminal LAGGINESS.  This version, although not bug of some major bugs, runs _well_, so I provide it in hopes it can be useful until the speed of the new wrapper is improved and a formal release is issued
+Although the new version 0.8.x development wrapper has a lot nicer features and many many bugfixes, I suffers from terminal LAGGINESS.  This version, although not free of some major bugs, runs _well_, so I provide it in hopes it can be useful until the speed of the new wrapper is improved and a formal release is issued
 
 R/ SurestTexas00
 
