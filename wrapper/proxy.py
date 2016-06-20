@@ -1027,7 +1027,7 @@ class Server: # Handle Server Connection  ("client bound" packets)
 						data["metadata"]))
 					return False
 			return True
-		if id == self.pktCB.spawnobject: #  #self.pktCB.spawnobject and self.state >= 3: # Spawn Object
+		if id == "unused":  #  self.pktCB.spawnobject: #  #self.pktCB.spawnobject and self.state >= 3: # Spawn Object
 			if self.version < PROTOCOL_1_9START:
 				data = self.read("varint:eid|byte:type_|int:x|int:y|int:z|byte:pitch|byte:yaw")
 				entityuuid = None
@@ -1039,7 +1039,7 @@ class Server: # Handle Server Connection  ("client bound" packets)
 			if not self.wrapper.server.world: return
 			self.wrapper.server.world.entities[data["eid"]] = Entity(eid, entityuuid, type_, (x, y, z), (pitch, yaw), True)
 			return True
-		if id == self.pktCB.spawnmob:  # Spawn Mob
+		if id == "unused":  #  self.pktCB.spawnmob:  # Spawn Mob
 			if self.version < PROTOCOL_1_9START:
 				data = self.read("varint:eid|ubyte:type_|int:x|int:y|int:z|byte:pitch|byte:yaw|byte:head_pitch|short:velocityX|short:velocityY|short:velocityZ|rest:metadata")
 				entityuuid = None
@@ -1050,24 +1050,24 @@ class Server: # Handle Server Connection  ("client bound" packets)
 			if not self.wrapper.server.world: return
 			# this will need entity UUID's added at some point
 			self.wrapper.server.world.entities[data["eid"]] = Entity(eid, entityuuid, type_, (x, y, z), (pitch, yaw, head_pitch), False)
-		if id == self.pktCB.entityrelativemove:  # Entity Relative Move
+		if id == "unused":  #  self.pktCB.entityrelativemove:  # Entity Relative Move
 			if self.version < PROTOCOLv1_8START: return True # Temporary! These packets need to be filtered for cross-server stuff.
 			data = self.read("varint:eid|byte:dx|byte:dy|byte:dz")
 			if not self.wrapper.server.world: return
 			if not self.wrapper.server.world.getEntityByEID(data["eid"]) == None:
 				self.wrapper.server.world.getEntityByEID(data["eid"]).moveRelative((data["dx"], data["dy"], data["dz"]))
-		if id == self.pktCB.entityteleport:  # Entity Teleport
+		if id == "unused":  #  self.pktCB.entityteleport:  # Entity Teleport
 			if self.version < PROTOCOLv1_8START: return True # Temporary! These packets need to be filtered for cross-server stuff.
 			data = self.read("varint:eid|int:x|int:y|int:z|byte:yaw|byte:pitch")
 			if not self.wrapper.server.world: return
 			if not self.wrapper.server.world.getEntityByEID(data["eid"]) == None:
 				self.wrapper.server.world.getEntityByEID(data["eid"]).teleport((data["x"], data["y"], data["z"]))
-		if id == self.pktCB.entityheadlook:
+		if id == "unused":  #  self.pktCB.entityheadlook:
 			data = self.read("varint:eid|byte:angle")
-		if id == self.pktCB.entitystatus:  # Entity Status
+		if id == "unused":  #  self.pktCB.entitystatus:  # Entity Status
 			if self.version < PROTOCOLv1_8START: return True # Temporary! These packets need to be filtered for cross-server stuff.
 			data = self.read("int:eid|byte:status")
-		if id == self.pktCB.attachentity:  # Attach Entity
+		if id == "unused":  #  self.pktCB.attachentity:  # Attach Entity
 			if self.version < PROTOCOLv1_8START: return True # Temporary! These packets need to be filtered for cross-server stuff.
 			data = self.read("varint:eid|varint:vid|bool:leash")
 			eid, vid, leash = data["eid"], data["vid"], data["leash"]
@@ -1085,25 +1085,25 @@ class Server: # Handle Server Connection  ("client bound" packets)
 				if eid != self.client.eid:
 					self.client.send(self.pktCB.attachentity, "varint|varint|bool", (self.client.eid, vid, leash))
 					return False
-		if id == self.pktCB.entitymetadata:  # Entity Metadata
+		if id == "unused":  #  self.pktCB.entitymetadata:  # Entity Metadata
 			if self.version < PROTOCOLv1_8START: return True # Temporary! These packets need to be filtered for cross-server stuff.
 			data = self.read("varint:eid|rest:metadata")
 			if data["eid"] == self.eid:
 				self.client.send(self.pktCB.entitymetadata, "varint|raw", (self.client.eid, data["metadata"]))
 				return False
-		if id == self.pktCB.entityeffect:  # Entity Effect
+		if id == "unused":  #  self.pktCB.entityeffect:  # Entity Effect
 			if self.version < PROTOCOLv1_8START: return True # Temporary! These packets need to be filtered for cross-server stuff.
 			data = self.read("varint:eid|byte:effect_id|byte:amplifier|varint:duration|bool:hide")
 			if data["eid"] == self.eid:
 				self.client.send(self.pktCB.entityeffect, "varint|byte|byte|varint|bool", (self.client.eid, data["effect_id"], data["amplifier"], data["duration"], data["hide"]))
 				return False
-		if id == self.pktCB.removeentityeffect:  # Remove Entity Effect
+		if id == "unused":  #  self.pktCB.removeentityeffect:  # Remove Entity Effect
 			if self.version < PROTOCOLv1_8START: return True # Temporary! These packets need to be filtered for cross-server stuff.
 			data = self.read("varint:eid|byte:effect_id")
 			if data["eid"] == self.eid:
 				self.client.send(self.pktCB.removeentityeffect, "varint|byte", (self.client.eid, data["effect_id"]))
 				return False
-		if id == self.pktCB.entityproperties:  # Entity Properties
+		if id == "unused":  #  self.pktCB.entityproperties:  # Entity Properties
 			if self.version < PROTOCOLv1_8START: return True # Temporary! These packets need to be filtered for cross-server stuff.
 			data = self.read("varint:eid|rest:properties")
 			if data["eid"] == self.eid:
@@ -1115,7 +1115,7 @@ class Server: # Handle Server Connection  ("client bound" packets)
 #				print "CLIENT COMPRESSION ENABLED"
 #				self.client.packet.setCompression(256)
 
-		if True == False: #  #self.pktCB.blockchange: # Block Change - disabled - not doing anything at this point
+		if id == "unused":  #   #self.pktCB.blockchange: # Block Change - disabled - not doing anything at this point
 			if self.version < PROTOCOLv1_8START: return True # Temporary! These packets need to be filtered for cross-server stuff.
 			data = self.read("position:location|varint:id")
 
