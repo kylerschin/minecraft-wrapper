@@ -1,12 +1,12 @@
 #About this branch#
-You are viewing the "stable" release branch.  This branch reliably supports 1.8.9, 1.9, and 1.10 Minecraft versions.
+You are viewing the "stable" branch.  This branch reliably supports 1.8.9, 1.9, and 1.10 Minecraft versions.
 
-This branch is considered stable enough to use for reliably hosting a small but active server having a steady load of 10-15 players in a "real" production server.  Easily holds 15 players at once with no lag or other bug issues, provided the wrapper is restarted periodically (how often will depend on the complexity of your plugins and how many players are joining and leaving).  This version suffers in general from the memory leak issue #276 which will result in player objects and uuids being set to "None/False" and general bugginess.  Some guidelines:
+This branch is considered stable enough to use for reliably hosting a small but active server having a steady load of 10-15 players in a "real" production server.  Easily holds 15 players at once with no lag or other bug issues, provided the wrapper is restarted periodically (how often will depend on the complexity of your plugins and how many players are joining and leaving).  This version suffers in general from the memory leak issue [#276](https://github.com/benbaptist/minecraft-wrapper/issues/276) which will result in player objects and uuids being set to "None/False" and general bugginess.  Some guidelines:
 20-30 players, complex plugin system - HOURLY
 10-15 players, complex plugins (block protection, land claims, so forth) - 2-4 hours
 otherwise, twice a day will suffice.
 
-Although the new version 8.x development wrapper has a lot nicer features and many many bugfixes, I suffers from terminal LAGGINESS.  This version, although not bug of some major bugs, runs _well_, so I provide it in hopes it can be useful until the speed of the new wrapper is improved and a formal release is issued
+Although the new version 0.8.x development wrapper has a lot nicer features and many many bugfixes, I suffers from terminal LAGGINESS.  This version, although not free of some major bugs, runs _well_, so I provide it in hopes it can be useful until the speed of the new wrapper is improved and a formal release is issued
 
 R/ SurestTexas00
 
