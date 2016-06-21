@@ -58,7 +58,7 @@ class Proxy:
 				self.log.error("Proxy mode could not bind - retrying in five seconds")
 				self.log.debug(traceback.format_exc())
 				self.socket = False
-			time.sleep(5)
+				time.sleep(5)
 		while not self.wrapper.halt:
 			try:
 				sock, addr = self.socket.accept()
@@ -202,7 +202,7 @@ class Client: # handle server-bound packets (client/game connection)
 		self.properties = {}
 		self.clientSettings = None
 		self.clientSettingsSent = False
-		for i in range(45): self.inventory[i] = None
+		for i in range(46): self.inventory[i] = None
 		
 		# Determine packet types - currently 1.8 is the lowest life form supported.
 		self.pktSB = defPacketsSB  # receive/parse these
@@ -367,7 +367,7 @@ class Client: # handle server-bound packets (client/game connection)
 					self.serverUUID = self.wrapper.UUIDFromName("OfflinePlayer:%s" % self.username)
 					self.send(0x02, "string|string", (str(self.uuid), self.username))
 					self.state = 3
-					self.log.info("%s logged in (IP: %s)" % (self.username, self.addr[0]))
+					self.log.info("%s joined the wrapper from (IP: %s)" % (self.username, self.addr[0]))
 				return False
 
 		if id == 0x01:
@@ -412,7 +412,7 @@ class Client: # handle server-bound packets (client/game connection)
 					newUsername = self.wrapper.lookupUsernamebyUUID(str(self.uuid))
 					if newUsername:
 						if newUsername != self.username:
-							self.log.info("%s logged in with new name, falling back to %s" % (self.username, newUsername))
+							self.log.info("%s joined using a new name, falling back to %s" % (self.username, newUsername))
 							self.username = newUsername
 				else:
 					self.uuid = uuid.uuid3(uuid.NAMESPACE_OID, "OfflinePlayer: %s" % self.username)

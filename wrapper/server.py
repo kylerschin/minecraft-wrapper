@@ -180,11 +180,15 @@ class Server:
 		extras.append({"text": current, "color": color, "obfuscated": obfuscated, 
 			"underlined": underline, "bold": bold, "italic": italic, "strikethrough": strikethrough})
 		return json.dumps({"text": "", "extra": extras})
-	def login(self, username):
+	def login(self, username, eid ,location):
 		""" Called when a player logs in """
 		try:
 			if username not in self.players:
 				self.players[username] = api.Player(username, self.wrapper)
+			if self.wrapper.proxy:
+				playerclient = self.getPlayer(username).getClient()
+				playerclient.servereid = eid
+				playerclient.position = location
 			self.wrapper.callEvent("player.login", {"player": self.getPlayer(username)})
 		except:
 			self.log.getTraceback()
@@ -355,7 +359,11 @@ class Server:
 				self.wrapper.callEvent("player.message", {"player": self.getPlayer(name), "message": message, "original": original})
 			elif args(1) == "logged": # Player Login
 				name = self.stripSpecial(args(0)[0:args(0).find("[")])
-				self.login(name)
+				eid = int(self.getargs(line.split(" "), 6))
+				locationtext = self.getargs(line.split(" ("), 1)[:-1].split(", ")
+				location = int(float(locationtext[0])), int(float(locationtext[1])), int(float(locationtext[2]))
+				self.login(name, eid, location)
+				#self.login(name)
 			elif args(1) == "lost": # Player Logout
 				name = args(0)
 				self.logout(name)
@@ -392,7 +400,7 @@ class Server:
 				self.wrapper.callEvent("player.message", {"player": self.getPlayer(name), "message": message, "original": original})
 			elif args(4) == "logged": # Player Login
 				name = self.stripSpecial(args(3)[0:args(3).find("[")])
-				self.login(name)
+				self.login(name, None, (0, 0, 0))
 			elif args(4) == "lost": # Player Logout
 				name = args(3)
 				self.logout(name)
@@ -470,3 +478,10 @@ class Server:
 				for f in os.listdir(i[0]):
 					size += os.path.getsize(os.path.join(i[0], f))
 			self.worldSize = size
+
+	@staticmethod
+	def getargs(arginput, i):
+		if not i >= len(arginput):
+			return arginput[i]
+		else:
+			return ""
