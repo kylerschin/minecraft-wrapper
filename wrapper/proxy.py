@@ -202,6 +202,11 @@ class Client: # handle server-bound packets (client/game connection)
 		self.riding = None
 		self.lastplacecoords = (0, 0, 0)  # last placement (for use in cases of bucket use)
 		self.windowCounter = 2
+
+		self.servereid = None
+		self.bedposition = None
+		self.lastitem = None
+
 		self.properties = {}
 		self.clientSettings = None
 		self.clientSettingsSent = False
