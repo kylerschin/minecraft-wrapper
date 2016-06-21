@@ -1,4 +1,14 @@
 
+Build 113.1
+___________________________________________________
+(backports of critical or useful features and bugfixes from development):
+___________________________________________________
+- Fix player permissions problems with setting groups for new players using setGroup().
+- Fix buggy window inventory management system.
+- Fixed 2 main sources of UUID problems and player object problems from 1) proxy logons causing premature "player.login"
+and 2) assisting wrapper by populating eids and player locations from server console login readout.
+- Disable entity processing which was continuously loading wrapper on an ongoing basis with entity data that was never dumped or trimmed.
+
 Builds - 112 - 113:
 - experimental pre-releases of build #114
 - A dead end branch, but one that generally performs quite well in gameplay (does not suffer much lag).

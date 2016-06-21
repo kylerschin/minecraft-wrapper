@@ -49,7 +49,7 @@ class Player:
 		if str(self.uuid) not in self.permissions["users"]:  # no reason not to do this here too
 			self.permissions["users"][str(self.uuid)] = {"groups": [], "permissions": {}}
 
-		
+
 		if not "firstLoggedIn" in self.data: self.data["firstLoggedIn"] = (time.time(), time.tzname)
 		if not "logins" in self.data:
 			self.data["logins"] = {}
