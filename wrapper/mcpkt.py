@@ -90,6 +90,7 @@ class ClientBound18:
     blockchange = 0x23
     mapchunkbulk = 0x26
     setslot = 0x2f
+    windowitems = 0x30
     playerlistitem = 0x38
     disconnect = 0x40
     changegamestate = 0x2b
@@ -115,6 +116,7 @@ class ClientBound19:  # updated to protocol 107 1.9 minecraft
     blockchange = 0xEE  # -0x0b  disabled: wrapper code prior to build 109 does nothing
     chatmessage = 0x0f
     setslot = 0x16
+    windowitems = 0x14
     namedsoundeffect = 0x19
     disconnect = 0x1a
     entitystatus = 0x1b

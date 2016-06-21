@@ -39,6 +39,9 @@ class Proxy:
 
 		self.privateKey = encryption.generate_key_pair()
 		self.publicKey = encryption.encode_public_key(self.privateKey)
+
+		self.currentwindowid = 0
+
 	def host(self):
 		# get the protocol version from the server
 		while not self.wrapper.server.state == 2:
@@ -781,7 +784,10 @@ class Server: # Handle Server Connection  ("client bound" packets)
 		self.log = wrapper.log
 		self.safe = False
 		self.eid = None
-		
+
+		self.currentwindowid = -1
+		self.noninventoryslotcount = 0
+
 		# Determine packet set to use
 		self.pktSB = defPacketsSB
 		self.pktCB = defPacketsCB
@@ -1149,18 +1155,49 @@ class Server: # Handle Server Connection  ("client bound" packets)
 			data = self.read("ubyte:reason|float:value")
 			if data["reason"] == 3:
 				self.client.gamemode = data["value"]
+
+		if id == self.pktCB.openwindow:
+			# This works together with SET_SLOT to maintain accurate inventory in wrapper
+			if self.version < PROTOCOLv1_8START:
+				parsing = "ubyte:wid|ubyte:unk1|string:unk2|ubyte:slotcount"
+			else:
+				parsing = "ubyte:wid|string:unk1|json:unk2|ubyte:slotcount"
+			data = self.read(parsing)
+			self.currentwindowid = data["wid"]
+			self.noninventoryslotcount = data["slotcount"]
+
 		if id == self.pktCB.setslot: # Set Slot
 			if self.version < PROTOCOLv1_8START: return True # Temporary! These packets need to be filtered for cross-server stuff.
 			data = self.read("byte:wid|short:slot|slot:data")
 			if data["wid"] == 0:
 				self.client.inventory[data["slot"]] = data["data"]
-		# if id == 0x30: # Window Items
-		# 	data = self.read("byte:wid|short:count")
-		# 	print data["count"]
-		# 	if data["wid"] == 0:
-		# 		for slot in range(1, data["count"]):
-		# 			data = self.read("slot:data")
-		# 			self.client.inventory[slot] = data["data"]
+			if data["wid"] < 0:
+				return True
+			if data["wid"] == self.currentwindowid and data["slot"] >= self.noninventoryslotcount:
+					self.client.inventory[data["slot"] - self.noninventoryslotcount + 9] = data["data"]
+
+		elif id == self.pktCB.windowitems:  # Window Items
+			# I am interested to see when this is used and in what versions.  It appears to be superfluous, as
+			# SET_SLOT seems to do the purported job nicely.
+			data = self.read("byte:wid|short:count")
+			windowid = data["wid"]
+			elementcount = data["count"]
+			# data = self.packet.read("byte:wid|short:count")
+			# if data["wid"] == 0:
+			#     for slot in range(1, data["count"]):
+			#         data = self.packet.readpkt("slot:data")
+			#         self.client.inventory[slot] = data["data"]
+			elements = []
+			if self.version > PROTOCOLv1_8START:  # just parsing for now; not acting on, so OK to skip 1.7.9
+				for _ in xrange(elementcount):
+					elements.append(self.packet.read_slot())
+			jsondata = {
+				"windowid": windowid,
+				"elementcount": elementcount,
+				"elements": elements
+			}
+			# print("(PROXY SERVER) -> Parsed 0x30 packet:\n%s" % jsondata)
+
 		if id == self.pktCB.playerlistitem:  # player list item
 			if self.version > PROTOCOLv1_8START:
 				head = self.read("varint:action|varint:length")
