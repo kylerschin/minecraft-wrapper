@@ -698,21 +698,14 @@ class Client: # handle server-bound packets (client/game connection)
 			else:
 				data = self.read("string:locale|byte:view_distance|varint:chat_mode|bool:chat_colors|ubyte:displayed_skin_parts|varint:main_hand")
 			self.clientSettings = data
-		# click window
-		if id == self.pktSB.clickwindow:
-			data = self.read("ubyte:wid|short:slot|byte:button|short:action|byte:mode|slot:clicked")
-			data['player']=self.getPlayerObject()
-			if not self.wrapper.callEvent("player.slotClick",data): return False
 
+		# click window
 		if id == self.pktSB.clickwindow:  # click window
 			if self.version < PROTOCOLv1_8START: return True
-			# ("byte:wid|short:slot|byte:button|short:action|byte:mode|slot:clicked")
 			if PROTOCOLv1_8START < self.version < PROTOCOL_1_9START:
-				data = self.read("byte:wid|short:slot|byte:button|short:action|byte:mode|slot:clicked")
-			# ("ubyte:wid|short:slot|byte:button|short:action|byte:mode|slot:clicked")
-			else:  # mcpackets.PROTOCOL_1_9START <= self.clientversion < mcpackets.PROTOCOL_MAX:
+				data = self.read("ubyte:wid|short:slot|byte:button|short:action|byte:mode|slot:clicked")
+			else:
 				data = self.read("ubyte:wid|short:slot|byte:button|short:action|varint:mode|slot:clicked")
-			# ("ubyte:wid|short:slot|byte:button|short:action|varint:mode|slot:clicked")
 
 			datadict = {
 				"player": self.getPlayerObject(),
@@ -730,6 +723,7 @@ class Client: # handle server-bound packets (client/game connection)
 			if data["wid"] == 0 and data["button"] in (0, 1):  # window 0 (inventory) and right or left click
 				if self.lastitem is None and data["clicked"] is None:  # player first clicks on an empty slot - mark empty.
 					self.inventory["slot"] = None
+					return True
 
 				if self.lastitem is None:  # player first clicks on a slot where there IS some data..
 					# having clicked on it puts the slot into NONE status (since it can now be moved)
