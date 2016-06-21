@@ -707,41 +707,28 @@ class Client: # handle server-bound packets (client/game connection)
 			else:
 				data = self.read("ubyte:wid|short:slot|byte:button|short:action|varint:mode|slot:clicked")
 
-			datadict = {
-				"player": self.getPlayerObject(),
-				"wid": data["wid"],  # window id ... always 0 for inventory
-				"slot": data["slot"],  # slot number
-				"button": data["button"],  # mouse / key button
-				"action": data["action"],  # unique action id - incrementing counter
-				"mode": data["mode"],
-				"clicked": data["clicked"]  # item data
-			}
-
-			if not self.wrapper.events.callevent("player.slotClick", datadict):
-				return False
-
 			if data["wid"] == 0 and data["button"] in (0, 1):  # window 0 (inventory) and right or left click
 				if self.lastitem is None and data["clicked"] is None:  # player first clicks on an empty slot - mark empty.
 					self.inventory["slot"] = None
-					return True
 
-				if self.lastitem is None:  # player first clicks on a slot where there IS some data..
+				elif self.lastitem is None:  # player first clicks on a slot where there IS some data..
 					# having clicked on it puts the slot into NONE status (since it can now be moved)
 					self.inventory[data["slot"]] = None  # we set the current slot to empty/none
 					self.lastitem = data["clicked"]  # ..and we cache the new slot data to see where it goes
-					return True
 
 				# up to this point, there was not previous item
-				if self.lastitem is not None and data["clicked"] is None:  # now we have a previous item to process
+				elif self.lastitem is not None and data["clicked"] is None:  # now we have a previous item to process
 					self.inventory[data["slot"]] = self.lastitem  # that previous item now goes into the new slot.
 					self.lastitem = None  # since the slot was empty, there is no newer item to cache.
-					return True
 
-				if self.lastitem is not None and data["clicked"] is not None:
+				elif self.lastitem is not None and data["clicked"] is not None:
 					# our last item now occupies the space clicked and the new item becomes the cached item.
 					self.inventory[data["slot"]] = self.lastitem  # set the cached item into the clicked slot.
 					self.lastitem = data["clicked"]  # put the item that was in the clicked slot into the cache now.
-					return True
+				else:
+					pass
+			if not self.wrapper.callEvent("player.slotClick", data): return False
+			return True
 
 		# Spectate - convert packet to local server UUID
 		if id == self.pktSB.spectate:
