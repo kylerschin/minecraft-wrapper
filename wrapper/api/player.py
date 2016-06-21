@@ -40,6 +40,16 @@ class Player:
 							" http://github.com/benbaptist/minecraft-wrapper/issues" % (self.username, str(self.wrapper.proxy)))
 		
 		self.data = storage.Storage(self.uuid, root="wrapper-data/players")
+		if "groups" not in self.permissions:
+			self.permissions["groups"] = {}
+			self.permissions["groups"]["Default"] = {}
+			self.permissions["groups"]["Default"]["permissions"] = {}
+		if "users" not in self.permissions:  # top -level dict item should be just checked once here (not over and over)
+			self.permissions["users"] = {}
+		if str(self.uuid) not in self.permissions["users"]:  # no reason not to do this here too
+			self.permissions["users"][str(self.uuid)] = {"groups": [], "permissions": {}}
+
+		
 		if not "firstLoggedIn" in self.data: self.data["firstLoggedIn"] = (time.time(), time.tzname)
 		if not "logins" in self.data:
 			self.data["logins"] = {}
